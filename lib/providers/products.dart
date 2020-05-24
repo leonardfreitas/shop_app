@@ -5,7 +5,7 @@ import '../data/dummy_data.dart';
 class Products with ChangeNotifier {
   List<Product> _items = DUMMY_PRODUCTS;
 
-  List<Product> get items => [..._items];
+  List<Product> get items => [...items];
 
   void addProduct(Product product) {
     _items.add(product);
