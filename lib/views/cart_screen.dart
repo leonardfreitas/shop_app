@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/cart_item_widget.dart';
 import '../providers/cart.dart';
 
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Cart cart = Provider.of(context);
+    final cartItems = cart.items.values.toList();
 
     return Scaffold(
         appBar: AppBar(
@@ -30,7 +32,7 @@ class CartScreen extends StatelessWidget {
                       label: Text(
                         'R\$ ${cart.totalAmount}',
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1.color,
+                          color: Colors.white,
                         ),
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
@@ -43,6 +45,15 @@ class CartScreen extends StatelessWidget {
                     )
                   ],
                 ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: cart.itemsCount,
+                itemBuilder: (ctx, i) => CartItemWidget(cartItems[i]),
               ),
             )
           ],
