@@ -23,7 +23,19 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _updateImage() {
-    setState(() {});
+    if (isValidImageUrl(_imageController.text)) {
+      setState(() {});
+    }
+  }
+
+  bool isValidImageUrl(String url) {
+    bool startWithHttp = url.toLowerCase().startsWith('http://');
+    bool startWithHttps = url.toLowerCase().startsWith('https://');
+    bool endsWithPng = url.toLowerCase().endsWith('.png');
+    bool endsWithJpg = url.toLowerCase().endsWith('.jpg');
+    bool endsWithJpeg = url.toLowerCase().endsWith('.jpeg');
+    return (startWithHttp || startWithHttps) &&
+        (endsWithPng || endsWithJpg || endsWithJpeg);
   }
 
   @override
@@ -100,6 +112,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     decimal: true,
                   ),
                   onSaved: (value) => _formData['price'] = double.parse(value),
+                  validator: (value) {
+                    bool isEmpty = value.trim().isEmpty;
+                    var newPrice = double.tryParse(value);
+                    bool isInvalid = newPrice == null || newPrice <= 0;
+                    if (isEmpty || isInvalid) {
+                      return 'Informe um preço válido';
+                    }
+
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Descrição'),
@@ -128,6 +150,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           _saveForm();
                         },
                         onSaved: (value) => _formData['imageUrl'] = value,
+                        validator: (value) {
+                          bool isEmpty = value.trim().isEmpty;
+                          bool isInvalid = !isValidImageUrl(value);
+                          if (isEmpty || isInvalid) {
+                            return 'Imagem invália';
+                          }
+
+                          return null;
+                        },
                       ),
                     ),
                     Container(
