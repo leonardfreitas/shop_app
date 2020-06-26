@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/exceptions/http_exception.dart';
 
+import '../utils/constants.dart';
+
 class Product with ChangeNotifier {
-  final String _baseUrl =
-      'https://shop-app-flutter-5b9cc.firebaseio.com/products';
+  final String _baseUrl = '${Constants.BASE_API_URL}products';
 
   final String id;
   final String title;
