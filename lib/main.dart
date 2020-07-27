@@ -8,6 +8,7 @@ import './providers/cart.dart';
 import './providers/products.dart';
 import './providers/orders.dart';
 
+import './views/auth_screen.dart';
 import './views/products_overview_screen.dart';
 import './views/cart_screen.dart';
 import './views/product_detail_screen.dart';
@@ -41,8 +42,10 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
           textTheme: TextTheme(headline1: TextStyle(color: Colors.red)),
         ),
-        home: ProductOverViewScreen(),
+        // home: ProductOverViewScreen(),
         routes: {
+          AppRoutes.AUTH: (ctx) => AuthScreen(),
+          AppRoutes.HOME: (ctx) => ProductOverViewScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
