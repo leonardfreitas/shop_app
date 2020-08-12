@@ -8,6 +8,8 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  GlobalKey<FormState> _form = GlobalKey();
+  bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
   final Map<String, String> _authData = {
@@ -15,7 +17,39 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
 
-  void _submit() {}
+  void _submit() {
+    if (!_form.currentState.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    _form.currentState.save();
+
+    if (_authMode == AuthMode.Login) {
+      // logica de login
+    } else {
+      // logica de registro
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _switchAuthMode() {
+    if (_authMode == AuthMode.Login) {
+      setState(() {
+        _authMode = AuthMode.Signup;
+      });
+    } else {
+      setState(() {
+        _authMode = AuthMode.Login;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +61,11 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
-        height: 320,
+        height: _authMode == AuthMode.Login ? 310 : 400,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
+          key: _form,
           child: Column(
             children: [
               TextFormField(
@@ -60,7 +95,6 @@ class _AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Confirmar Senha'),
                   obscureText: true,
-                  controller: _passwordController,
                   validator: _authMode == AuthMode.Signup
                       ? (value) {
                           if (value != _passwordController.text) {
@@ -69,25 +103,32 @@ class _AuthCardState extends State<AuthCard> {
                           return null;
                         }
                       : null,
-                  onSaved: (value) => _authData['password'] = value,
                 ),
-              SizedBox(
-                height: 20,
-              ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+              Spacer(),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                  textColor: Theme.of(context).primaryTextTheme.button.color,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 8.0,
+                  ),
+                  child: Text(
+                    _authMode == AuthMode.Login ? 'Acessar' : 'Registar',
+                  ),
+                  onPressed: _submit,
                 ),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).primaryTextTheme.button.color,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 8.0,
-                ),
+              FlatButton(
+                onPressed: _switchAuthMode,
                 child: Text(
-                  _authMode == AuthMode.Login ? 'Acessar' : 'Registar',
+                  "Alternar para ${_authMode == AuthMode.Login ? 'Registrar' : 'Login'}",
                 ),
-                onPressed: _submit,
+                textColor: Theme.of(context).primaryColor,
               ),
             ],
           ),
